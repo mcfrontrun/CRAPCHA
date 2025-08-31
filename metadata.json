@@ -1,0 +1,5 @@
+{
+  "name": "Powered by CRAPCHA",
+  "description": "A web app that appears to be a normal CAPTCHA test but is actually a game that becomes progressively more difficult and absurd, designed to humorously frustrate the user.",
+  "requestFramePermissions": []
+}
