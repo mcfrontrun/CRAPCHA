@@ -1,4 +1,5 @@
 
+
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { GameState, ChallengeProps, ChallengeData } from './types';
 import { generateTaunt, generateVagueInstruction, generateMathTaunt, generateAdminCode } from './services/geminiService';
@@ -375,6 +376,62 @@ const Level8_GlitchingUI: React.FC<ChallengeProps> = ({ onComplete }) => {
     );
 };
 
+const Level9_ProgressBar: React.FC<ChallengeProps> = ({ onComplete }) => {
+    const [progress, setProgress] = useState(0);
+    const [statusText, setStatusText] = useState("Initializing secure connection...");
+
+    const absurdStatusMessages = [
+        "Reticulating splines...",
+        "Calibrating hamster wheel...",
+        "Decompressing neural net...",
+        "Buffering consciousness...",
+        "Re-aligning data packets...",
+        "Dividing by zero...",
+        "Almost there...",
+        "Checking for robot uprising...",
+        "Polishing the bits...",
+        "Verifying quantum state...",
+    ];
+
+    useEffect(() => {
+        const timeouts: NodeJS.Timeout[] = [];
+        const updateState = (p: number, text: string) => {
+            setProgress(p);
+            setStatusText(text);
+        };
+
+        timeouts.push(setTimeout(() => updateState(25, absurdStatusMessages[0]), 1000));
+        timeouts.push(setTimeout(() => updateState(45, absurdStatusMessages[1]), 3000));
+        timeouts.push(setTimeout(() => updateState(30, "Error: Re-routing..."), 5000));
+        timeouts.push(setTimeout(() => updateState(75, absurdStatusMessages[2]), 7000));
+        timeouts.push(setTimeout(() => updateState(99, absurdStatusMessages[6]), 10000));
+        timeouts.push(setTimeout(() => updateState(80, absurdStatusMessages[4]), 14000));
+        timeouts.push(setTimeout(() => updateState(99, absurdStatusMessages[7]), 16000));
+        timeouts.push(setTimeout(() => updateState(100, "Humanity confirmed."), 19000));
+        timeouts.push(setTimeout(() => onComplete(true), 20000));
+
+        return () => {
+            timeouts.forEach(clearTimeout);
+        };
+    }, [onComplete]);
+
+    return (
+        <div className="p-4 space-y-4">
+            <div className="w-full bg-gray-200 rounded-full h-6 overflow-hidden border border-gray-300">
+                <div 
+                    className="bg-blue-600 h-6 rounded-full text-center text-white text-sm leading-6 transition-all duration-500 ease-out"
+                    style={{ width: `${progress}%` }}
+                >
+                    {progress}%
+                </div>
+            </div>
+            <p className="text-center text-gray-600 min-h-[1.5rem]" aria-live="polite">
+                {statusText}
+            </p>
+        </div>
+    );
+};
+
 // --- MAIN APP --- //
 
 const App: React.FC = () => {
@@ -392,6 +449,7 @@ const App: React.FC = () => {
     { level: 6, title: 'Cognitive Test', instruction: 'Click all the differences in the images.', component: Level6_FindTheDifference },
     { level: 7, title: 'Abstract Association', instruction: 'Follow the instruction below.', component: Level7_VagueInstruction },
     { level: 8, title: 'UI Interaction Test', instruction: 'Confirm your action.', component: Level8_GlitchingUI },
+    { level: 9, title: 'Data Synchronization', instruction: 'Please wait for the process to complete.', component: Level9_ProgressBar },
   ], []);
 
   const handleChallengeComplete = useCallback((success: boolean) => {
